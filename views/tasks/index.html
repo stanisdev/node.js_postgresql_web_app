@@ -2,8 +2,12 @@
 
 {% block content %}
 
-  This is main page.
-  <br>
+  Hello, <strong>{{ user.name }}</strong>. This is main page.
+  <br/>
+  <a href="/tasks">Tasks</a>
+  <br/>
+  <a href="/crate_task">Crate new task</a>
+  <br/>
   <a href="/user/logout">Leave</a>
 
 {% endblock %}

@@ -18,9 +18,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         isEmail: {
-          msg: 'Email value is incorrect'
+          msg: 'Email value not mathes with email-pattern'
         },
         len: {
           args: [6, 50],
@@ -29,25 +30,72 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {
           msg: 'Email value cannot be empty'
         },
+        async isUnique(email) {
+          try {
+            var user = await User.findOne({
+              where: { email },
+              attributes: ['id']
+            });
+          } catch (err) {
+            throw new Error('Something is going wrong');
+          }
+          if (user instanceof Object) {
+            throw new Error('Email already exists');
+          }
+          return true;
+        }
       }
     },
     password: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
-        len: {
-          args: 60,
-          msg: 'Password value length must be equal 60 symbols'
-        },
         notEmpty: {
           msg: 'Password value cannot be empty'
+        },
+        len: {
+          args: [5],
+          msg: 'Password value length must be more or equal 5 symbols '
         }
       }
     },
+    confirm_password: {
+      type: DataTypes.VIRTUAL,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Confirm password value cannot be empty'
+        },
+        match: function(value) {
+          if (typeof value == 'string' && value.length > 0 && value !== this.password) {
+            throw new Error('Password and confirm password are not math');
+          }
+        }
+      },
+    },
     role: {
-      type: DataTypes.SMALLINT
+      type: DataTypes.SMALLINT,
+      allowNull: false,
+      defaultValue: 0,
+      validate: {
+        isInt: {
+          msg: 'The role value type value must be an integer'
+        },
+        min: 0,
+        max: 32767
+      }
     },
     state: {
-      type: DataTypes.SMALLINT
+      type: DataTypes.SMALLINT,
+      allowNull: false,
+      defaultValue: 1,
+      validate: {
+        isInt: {
+          msg: 'The state value type must be an integer'
+        },
+        min: 0,
+        max: 32767
+      }
     }
   }, {
     updatedAt: false

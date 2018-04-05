@@ -2,18 +2,58 @@
 
 {% block content %}
 
-<form action="/user/login" method="post">
+<form action="/user/registration" method="post">
+  <div>
+    <label>Name:</label>
+    <input type="text" value="{{ user.name }}" name="name"/>
+    <div>
+      {% if errors %}
+        {% for error in errors.errors %}
+          {% if error.path == "name" %}
+            <div>{{ error.message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
   <div>
     <label>Email:</label>
-    <input type="email" value="" name="email"/>
+    <input type="email" value="{{ user.email }}" name="email"/>
+    <div>
+      {% if errors %}
+        {% for error in errors.errors %}
+          {% if error.path == "email" %}
+            <div>{{ error.message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
   </div>
   <div>
     <label>Password:</label>
     <input type="password" value="" name="password"/>
+    <div>
+      {% if errors %}
+        {% for error in errors.errors %}
+          {% if error.path == "password" %}
+            <div>{{ error.message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
   </div>
   <div>
     <label>Confirm password:</label>
     <input type="password" value="" name="confirm_password"/>
+    <div>
+      {% if errors %}
+        {% for error in errors.errors %}
+          {% if error.path == "confirm_password" %}
+            <div>{{ error.message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
   </div>
   <div>
     <input type="submit" value="Create"/>

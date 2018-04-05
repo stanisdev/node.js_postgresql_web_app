@@ -44,8 +44,26 @@ router.get('/registration', (req, res, next) => {
 /**
  * Create new account (POST)
  */
-router.post('/registration', (req, res, next) => {
-  res.json({});
-});
+router.post('/registration', asyncWrapper(async (req, res, next) => {
+  req.body.role = 0;
+  req.body.state = 1;
+  req.body.createdAt = new Date();
+  const user = db.User.build(req.body);
+  try {
+    await user.validate();
+  } catch (errors) {
+    return res.render('user/registration.html', {
+      title: 'Create new user',
+      errors,
+      user
+    });
+  }
+  try {
+    await user.save();
+  } catch (err) {
+    return next(err);
+  }
+  return res.redirect('/user/login');
+}));
 
 app.use('/user', router);
