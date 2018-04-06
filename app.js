@@ -8,14 +8,15 @@ const flash = require('express-flash');
 const app = express();
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
+const config = require('./config.json');
 
 app.use(session({
   store: new RedisStore({
-    host: '127.0.0.1',
-    port: 6379
+    host: config.redis.host,
+    port: config.redis.port
   }),
-  secret: 'Some secret key',
-  resave: false
+  secret: config.session.key,
+  resave: config.session.resave
 }));
 app.use(flash());
 process.env.DB_PATH = __dirname + '/database/models';

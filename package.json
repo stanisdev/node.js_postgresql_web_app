@@ -2,8 +2,9 @@
   "name": "node.js_postgresql_web_app",
   "version": "1.0.0",
   "description": "Web app based on Node.js and PostgreSQL (Express.js + Sequelize)",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
+    "start": "node ./bin/www",
     "start:dev": "nodemon ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,7 +19,7 @@
   },
   "homepage": "https://github.com/stanisdev/node.js_postgresql_web_app#readme",
   "dependencies": {
-    "bcrypt": "^1.0.3",
+    "bcrypt": "1.0.3",
     "body-parser": "1.18.2",
     "connect-redis": "3.3.3",
     "express": "4.16.3",

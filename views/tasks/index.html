@@ -16,6 +16,7 @@
         <td>Title</td>
         <td>Priority</td>
         <td>Done</td>
+        <td>Mark as done</td>
       </tr>
       {% for task in tasks %}
         <tr>
@@ -26,6 +27,11 @@
               Yes
             {% else %}
               No
+            {% endif %}
+          </td>
+          <td>
+            {% if task.done == false and task.user_id == user.id %}
+              <a href="/tasks/{{ task.id }}/done">done</a>
             {% endif %}
           </td>
         </tr>

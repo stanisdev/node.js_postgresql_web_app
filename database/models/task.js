@@ -48,8 +48,15 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: false
   });
 
+  /**
+   * Ralationship
+   */
   Task.associate = function(models) {
-    // associations can be defined here
+    models.Task.belongsTo(models.User, {
+      foreignKey: 'user_id',
+      targetKey: 'id',
+      constraints: false
+    });
   };
 
   /**
@@ -61,7 +68,10 @@ module.exports = (sequelize, DataTypes) => {
 
     const query = {
       where: {},
-      attributes: ['id', 'title', 'priority', 'done'],
+      attributes: ['id', 'title', 'priority', 'done', 'user_id'],
+      order: [
+        ['id', 'ASC']
+      ],
       raw: true
     };
     if (!req.user.isAdmin()) {
@@ -74,6 +84,20 @@ module.exports = (sequelize, DataTypes) => {
       query.where.done = JSON.parse(done);
     }
     return this.findAll(query);
+  };
+
+  /**
+   * Find one task by done false
+   */
+  Task.findByDoneFalse = function(req) {
+    return this.findOne({
+      where: {
+        id: req.params.id,
+        done: false,
+        user_id: req.user.get('id')
+      },
+      attributes: ['id', 'done']
+    });
   };
 
   return Task;

@@ -10,7 +10,7 @@ const db = require(process.env.DB_PATH);
  */
 router.get('/', passport.isAuth, asyncWrapper(async (req, res, next) => {
   const tasks = await db.Task.getAll(req);
-  res.render('tasks/index.html', {
+  return res.render('tasks/index.html', {
     title: 'Tasks page',
     user: req.user,
     query: req.query,
@@ -38,18 +38,18 @@ router.post('/', passport.isAuth, (req, res, next) => {
 /**
  * Create new tasks
  */
-router.get('/create', passport.isAuth, asyncWrapper(async (req, res, next) => {
+router.get('/create', passport.isAuth, (req, res, next) => {
   res.render('tasks/create.html', {
     title: 'Create new task'
   });
-}));
+});
 
 /**
  * Create new tasks (POST)
  */
 router.post('/create', passport.isAuth, asyncWrapper(async (req, res, next) => {
   req.body.done = false;
-  req.body.user_id = req.user.id;
+  req.body.user_id = req.user.get('id');
 
   try {
     var task = db.Task.build(req.body);
@@ -65,6 +65,19 @@ router.post('/create', passport.isAuth, asyncWrapper(async (req, res, next) => {
   } catch (err) {
     return next(err);
   }
+  return res.redirect('/tasks');
+}));
+
+/**
+ * Mark task as done
+ */
+router.get('/:id/done', passport.isAuth, asyncWrapper(async (req, res, next) => {
+  const task = await db.Task.findByDoneFalse(req);
+  if (!(task instanceof Object)) {
+    return res.send('Task not found');
+  }
+  task.set('done', true)
+  await task.save();
   return res.redirect('/tasks');
 }));
 

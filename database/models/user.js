@@ -101,10 +101,20 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: false
   });
 
+  /**
+   * Ralationship
+   */
   User.associate = function(models) {
-    // associations can be defined here
+    models.User.hasMany(models.Task, {
+      as: 'Tasks',
+      foreignKey: 'user_id',
+      sourceKey: 'id'
+    });
   };
 
+  /**
+   * Before create hook
+   */
   User.beforeCreate((user) => {
     return new Promise((res, rej) => {
       bcrypt.hash(user.password, 10).then((hash) => {
@@ -114,12 +124,16 @@ module.exports = (sequelize, DataTypes) => {
     });
   })
 
+  /**
+   * Check password
+   */
   User.prototype.isValidPassword = function(password) {
-    return new Promise((res, rej) => {
-      bcrypt.compare(password, this.password).then(res).catch(rej);
-    });
+    return bcrypt.compare(password, this.password);
   };
 
+  /**
+   * Is current user admin?
+   */
   User.prototype.isAdmin = function() {
     return this.role === 1;
   };

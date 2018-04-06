@@ -8,11 +8,11 @@ const db = require(process.env.DB_PATH);
 /**
  * Index page
  */
-router.get('/login', asyncWrapper(async (req, res, next) => {
+router.get('/login', (req, res, next) => {
   res.render('user/login.html', {
     title: 'Login to board'
   });
-}));
+});
 
 /**
  * User's attempt to login
