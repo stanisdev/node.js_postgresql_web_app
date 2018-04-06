@@ -2,12 +2,61 @@
 
 {% block content %}
 
-  Hello, <strong>{{ user.name }}</strong>. This is main page.
-  <br/>
-  <a href="/tasks">Tasks</a>
-  <br/>
-  <a href="/crate_task">Crate new task</a>
-  <br/>
+  Hello, <strong>{{ user.name }}</strong>. This is tasks page.
+  |
+  <a href="/tasks/create">Crate new task</a>
+  |
   <a href="/user/logout">Leave</a>
+
+  <br/><br/>
+  <div>
+
+    <table>
+      <tr>
+        <td>Title</td>
+        <td>Priority</td>
+        <td>Done</td>
+      </tr>
+      {% for task in tasks %}
+        <tr>
+          <td>{{ task.title }}</td>
+          <td>{{ task.priority }}</td>
+          <td>
+            {% if task.done %}
+              Yes
+            {% else %}
+              No
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+
+  </div>
+
+  <br/><br/>
+  <div>
+    <span>Filter:</span>
+    <form action="/tasks" method="post">
+      <div>
+        By priority:
+        <select name="priority">
+          <option value="">Not selected</option>
+          <option {% if query.priority == "low" %}selected{% endif %} value="low">Low</option>
+          <option {% if query.priority == 'medium' %}selected{% endif %} value="medium">Medium</option>
+          <option {% if query.priority == 'high' %}selected{% endif %} value="high">High</option>
+        </select>
+      </div>
+      <div>
+        By done:
+        <select name="done">
+          <option value="">Not selected</option>
+          <option {% if query.done == 'true' %}selected{% endif %} value="true">Yes</option>
+          <option {% if query.done == 'false' %}selected{% endif %} value="false">No</option>
+        </select>
+      </div>
+      <input type="submit" value="Apply">
+    </form>
+  </div>
 
 {% endblock %}

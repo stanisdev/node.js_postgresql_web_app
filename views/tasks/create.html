@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<form action="/tasks/create" method="post">
+  <div>
+    <label>Title:</label>
+    <input type="text" value="" name="title"/>
+    <div>
+      {% if errors %}
+        {% for error in errors.errors %}
+          {% if error.path == "title" %}
+            <div>{{ error.message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+  <div>
+    <label>Priority:</label>
+    <select name="priority">
+      <option value="low">Low</option>
+      <option value="medium">Medium</option>
+      <option value="high">High</option>
+    </select>
+    <div>
+      {% if errors %}
+        {% for error in errors.errors %}
+          {% if error.path == "priority" %}
+            <div>{{ error.message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+  <div>
+    <input type="submit" value="Create"/>
+  </div>
+</form>
+
+{% endblock %}

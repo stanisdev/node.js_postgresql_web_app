@@ -18,7 +18,7 @@ router.get('/login', asyncWrapper(async (req, res, next) => {
  * User's attempt to login
  */
 router.post('/login', passport.authenticate('local', {
-  successRedirect: '/',
+  successRedirect: '/tasks',
   failureRedirect: '/user/login',
   failureFlash: true,
   successFlash: 'Welcome!'

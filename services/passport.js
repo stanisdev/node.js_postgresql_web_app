@@ -39,7 +39,6 @@ passport.deserializeUser(function(id, done) {
   db.User.findOne({
     where: { id },
     attributes: ['id', 'name', 'email', 'role', 'state'],
-    raw: true
   }).then((user) => {
     done(null, user);
   }).catch((err) => {
